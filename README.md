@@ -2,16 +2,27 @@
 
 A new Flutter project.
 
-## Getting Started
+# Login Form
 
-This project is a starting point for a Flutter application.
+## Conceptos aplicados
 
-A few resources to get you started if this is your first Flutter project:
+- StatelessWidget
+- StatefulWidget
+- TextFormField
+- Form
+- GlobalKey<FormState>
+- TextEditingController
+- Validaciones
+- Organización por widgets
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## Lo que aprendí
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Diferencia entre TextField y TextFormField.
+- Cómo validar formularios.
+- Cómo dividir una pantalla en componentes reutilizables.
+
+## Mejoras futuras
+
+- Integrar una API real.
+- Agregar Riverpod para manejar el estado.
+- Implementar autenticación con Firebase.
