@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:whatsapp_clone/features/chat/presentation/pages/login_page.dart';
 
 import 'features/chat/presentation/pages/HomeView.dart';
 
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'ClonWhassapp',
-      home: HomeView(),
+      home: LoginPage(),
     );
   }
 }
