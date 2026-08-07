@@ -1,20 +1,84 @@
-import '../diminian/chat.dart';
+import '../dominian/chat.dart';
 
-
-final chats = [
-  Chat(name: "Endo", lastMessage: "Hola, ¿cómo estás?", hour: "10:30", leido: false),
-  Chat(name: "Juan", lastMessage: "Nos vemos mañana", hour: "09:45",leido: false),
-  Chat(name: "Diana", lastMessage: "Si señor en la misma lugar", hour: "10:31", leido: false),
-  Chat(name: "Patricia", lastMessage: "Listo llevo todo lsito", hour: "09:46", leido: false),
-  Chat(name: "Mi amore", lastMessage: "ok", hour: "10:32", leido: false),
-  Chat(name: "Madre", lastMessage: "Dale", hour: "09:47", leido: false),
-  Chat(name: "Abuela", lastMessage: "Hola, ¿cómo estás?", hour: "10:30", leido: false),
+final List<Chat> mockChats = [
   Chat(
-    name: "Esposa",
-    lastMessage:
-    "quería preguntarle si mañana podemos reunirnos para revisar el proyecto Flutter",
-    hour: "09:45", leido: false
+    id: 1,
+    name: "Endo",
+    lastMessage: "Hola, ¿cómo estás?",
+    hour: "10:30",
+    isRead: false,
+    isFavorite: false,
   ),
-  Chat(name: "Diego", lastMessage: "Hola, ¿cómo estás?", hour: "10:30", leido: false),
-  Chat(name: "Carlos", lastMessage: "Nos vemos mañana", hour: "09:45", leido: false),
+  Chat(
+    id: 2,
+    name: "Juan",
+    lastMessage: "Nos vemos mañana",
+    hour: "09:45",
+    isRead: false,
+    isFavorite: false,
+  ),
+  Chat(
+    id: 3,
+    name: "Diana",
+    lastMessage: "Sí señor, en el mismo lugar.",
+    hour: "10:31",
+    isRead: false,
+    isFavorite: false,
+  ),
+  Chat(
+    id: 4,
+    name: "Patricia",
+    lastMessage: "Listo, llevo todo preparado.",
+    hour: "09:46",
+    isRead: false,
+    isFavorite: false,
+  ),
+  Chat(
+    id: 5,
+    name: "Mi amore",
+    lastMessage: "Ok ❤️",
+    hour: "10:32",
+    isRead: false,
+    isFavorite: false,
+  ),
+  Chat(
+    id: 6,
+    name: "Madre",
+    lastMessage: "Dale.",
+    hour: "09:47",
+    isRead: false,
+    isFavorite: false,
+  ),
+  Chat(
+    id: 7,
+    name: "Abuela",
+    lastMessage: "¿Cómo amaneciste?",
+    hour: "08:15",
+    isRead: false,
+    isFavorite: false,
+  ),
+  Chat(
+    id: 8,
+    name: "Esposa",
+    lastMessage: "¿Podemos revisar el proyecto Flutter mañana?",
+    hour: "09:45",
+    isRead: false,
+    isFavorite: false,
+  ),
+  Chat(
+    id: 9,
+    name: "Diego",
+    lastMessage: "Te envié los documentos.",
+    hour: "11:05",
+    isRead: false,
+    isFavorite: false,
+  ),
+  Chat(
+    id: 10,
+    name: "Carlos",
+    lastMessage: "Nos vemos mañana.",
+    hour: "13:20",
+    isRead: false,
+    isFavorite: false,
+  ),
 ];
