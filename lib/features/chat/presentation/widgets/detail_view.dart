@@ -1,61 +1,117 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../diminian/chat.dart';
+import '../../dominian/chat.dart';
+import '../provaider/chat_provider.dart';
 
-class DetailView extends StatefulWidget {
+class DetailView extends ConsumerWidget {
   final Chat chat;
 
-  const DetailView({super.key, required this.chat});
+  const DetailView({
+    super.key,
+    required this.chat,
+  });
 
   @override
-  State<DetailView> createState() => _DetailViewState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final asyncChats = ref.watch(chatProvider);
 
-class _DetailViewState extends State<DetailView> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    widget.chat.leido = true;
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            CircleAvatar(radius: 22, child: Text(widget.chat.name[0])),
-            SizedBox(width: 10),
-            Text(widget.chat.name),
-          ],
+    return asyncChats.when(
+      loading: () => const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: .start,
-          crossAxisAlignment: .start,
-          children: [
-            Divider(),
-            Text('Mensaje:', style: TextStyle(fontWeight: FontWeight.bold)),
-            Row(
+
+      error: (error, stackTrace) => Scaffold(
+        body: Center(
+          child: Text(error.toString()),
+        ),
+      ),
+
+      data: (chats) {
+        final currentChat = chats.firstWhere(
+              (c) => c.id == chat.id,
+          orElse: () => chat,
+        );
+
+        return Scaffold(
+          appBar: AppBar(
+            title: Row(
               children: [
-                Text(widget.chat.lastMessage),
-                Spacer(),
-                (widget.chat.leido)
-                    ? Icon(Icons.whatshot_sharp, color: Colors.green)
-                    : Icon(Icons.whatshot_sharp),
+                CircleAvatar(
+                  radius: 22,
+                  child: Text(currentChat.name[0]),
+                ),
+                const SizedBox(width: 10),
+                Text(currentChat.name),
               ],
             ),
+          ),
 
-            SizedBox(height: 10),
-            Text('Hora:', style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(widget.chat.hour),
-          ],
-        ),
-      ),
+          body: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  '💬 Mensaje',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(currentChat.lastMessage),
+                    ),
+
+                    Icon(
+                      currentChat.isRead
+                          ? Icons.done_all
+                          : Icons.done,
+                      color: currentChat.isRead
+                          ? Colors.blue
+                          : Colors.grey,
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 24),
+
+                const Text(
+                  '🕒 Hora',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+
+                Text(currentChat.hour),
+
+                const Spacer(),
+
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.arrow_back),
+                    label: const Text('Volver'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

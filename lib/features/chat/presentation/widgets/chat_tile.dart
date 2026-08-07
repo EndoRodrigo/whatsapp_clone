@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../diminian/chat.dart';
+import '../../dominian/chat.dart';
+
+
 
 class ChatTile extends StatelessWidget {
   final Chat chat;
