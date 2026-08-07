@@ -1,10 +1,10 @@
 import 'package:whatsapp_clone/features/chat/dominian/chat.dart';
 
+import '../chat_mock.dart';
 import '../datasources/chat_datasource.dart';
 import 'app_database.dart';
 
 class SQLiteChatDataSource implements ChatDataSource {
-
   final AppDatabase appDatabase;
 
   SQLiteChatDataSource({required this.appDatabase});
@@ -18,37 +18,37 @@ class SQLiteChatDataSource implements ChatDataSource {
   @override
   Future<void> deleteChat(int id) async {
     final db = await appDatabase.database;
-    await db.delete(
-      'chats',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    await db.delete('chats', where: 'id = ?', whereArgs: [id]);
   }
 
   @override
   Future<List<Chat>> getChats() async {
     final db = await appDatabase.database;
-    final result = await db.query('chats');
-    return result.map((data) => Chat.fromMap(data)).toList();
+
+    var result = await db.query('chats');
+
+    if (result.isEmpty) {
+      for (final chat in mockChats) {
+        await db.insert('chats', chat.toMap());
+      }
+
+      result = await db.query('chats');
+    }
+
+    return result.map((map) => Chat.fromMap(map)).toList();
   }
 
   @override
-  Future<void> toggleFavorite(int id) async{
+  Future<void> toggleFavorite(int id) async {
     final db = await appDatabase.database;
 
-    final result = await db.query(
-      'chats',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    final result = await db.query('chats', where: 'id = ?', whereArgs: [id]);
 
     if (result.isEmpty) return;
 
     final chat = Chat.fromMap(result.first);
 
-    final updatedChat = chat.copyWith(
-      isFavorite: !chat.isFavorite,
-    );
+    final updatedChat = chat.copyWith(isFavorite: !chat.isFavorite);
 
     await db.update(
       'chats',
@@ -59,22 +59,16 @@ class SQLiteChatDataSource implements ChatDataSource {
   }
 
   @override
-  Future<void> toggleRead(int id) async{
+  Future<void> toggleRead(int id) async {
     final db = await appDatabase.database;
 
-    final result = await db.query(
-      'chats',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    final result = await db.query('chats', where: 'id = ?', whereArgs: [id]);
 
     if (result.isEmpty) return;
 
     final chat = Chat.fromMap(result.first);
 
-    final updatedChat = chat.copyWith(
-      isRead: true,
-    );
+    final updatedChat = chat.copyWith(isRead: true);
 
     await db.update(
       'chats',
@@ -83,5 +77,4 @@ class SQLiteChatDataSource implements ChatDataSource {
       whereArgs: [id],
     );
   }
-
 }
