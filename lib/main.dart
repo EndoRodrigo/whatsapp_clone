@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp_clone/features/chat/presentation/pages/login_page.dart';
 
 import 'features/chat/presentation/pages/HomeView.dart';
 
-
 void main() {
-  runApp(const MyApp());
+  runApp(
+    const Provider(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -14,12 +16,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'WhatsApp Clone',
       debugShowCheckedModeBanner: false,
-      title: 'ClonWhassapp',
-      home: LoginPage(),
+      theme: ThemeData(
+        colorSchemeSeed: Colors.green,
+        useMaterial3: true,
+      ),
+      home: const HomeView(),
     );
   }
 }
-
-
-

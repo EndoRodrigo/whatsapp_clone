@@ -1,4 +1,5 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_provider/flutter_provider.dart';
+
 
 import '../../dominian/chat.dart';
 import 'chat_provider.dart';
