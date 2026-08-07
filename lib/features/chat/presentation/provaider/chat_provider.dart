@@ -1,5 +1,3 @@
-
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../dominian/chat.dart';
@@ -19,33 +17,25 @@ class ChatNotifier extends AsyncNotifier<List<Chat>> {
   Future<void> toggleFavorite(int id) async {
     await repository.toggleFavorite(id);
 
-    state = AsyncData(
-      await repository.getChats(),
-    );
+    state = AsyncData(await repository.getChats());
   }
 
   Future<void> toggleRead(int id) async {
     await repository.toggleRead(id);
 
-    state = AsyncData(
-      await repository.getChats(),
-    );
+    state = AsyncData(await repository.getChats());
   }
 
   Future<void> deleteChat(int id) async {
     await repository.deleteChat(id);
 
-    state = AsyncData(
-      await repository.getChats(),
-    );
+    state = AsyncData(await repository.getChats());
   }
 
   Future<void> addChat(Chat chat) async {
     await repository.addChat(chat);
 
-    state = AsyncData(
-      await repository.getChats(),
-    );
+    state = AsyncData(await repository.getChats());
   }
 }
 

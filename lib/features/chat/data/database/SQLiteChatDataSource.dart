@@ -10,15 +10,19 @@ class SQLiteChatDataSource implements ChatDataSource {
   SQLiteChatDataSource({required this.appDatabase});
 
   @override
-  Future<void> addChat(Chat chat) {
-    // TODO: implement addChat
-    throw UnimplementedError();
+  Future<void> addChat(Chat chat) async {
+    final db = await appDatabase.database;
+    await db.insert('chats', chat.toMap());
   }
 
   @override
-  Future<void> deleteChat(int id) {
-    // TODO: implement deleteChat
-    throw UnimplementedError();
+  Future<void> deleteChat(int id) async {
+    final db = await appDatabase.database;
+    await db.delete(
+      'chats',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
   @override
@@ -29,17 +33,55 @@ class SQLiteChatDataSource implements ChatDataSource {
   }
 
   @override
-  Future<void> toggleFavorite(int id) {
-    // TODO: implement toggleFavorite
-    throw UnimplementedError();
+  Future<void> toggleFavorite(int id) async{
+    final db = await appDatabase.database;
+
+    final result = await db.query(
+      'chats',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    if (result.isEmpty) return;
+
+    final chat = Chat.fromMap(result.first);
+
+    final updatedChat = chat.copyWith(
+      isFavorite: !chat.isFavorite,
+    );
+
+    await db.update(
+      'chats',
+      updatedChat.toMap(),
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
   @override
-  Future<void> toggleRead(int id) {
-    // TODO: implement toggleRead
-    throw UnimplementedError();
+  Future<void> toggleRead(int id) async{
+    final db = await appDatabase.database;
+
+    final result = await db.query(
+      'chats',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    if (result.isEmpty) return;
+
+    final chat = Chat.fromMap(result.first);
+
+    final updatedChat = chat.copyWith(
+      isRead: true,
+    );
+
+    await db.update(
+      'chats',
+      updatedChat.toMap(),
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
-
-
 
 }
