@@ -1,8 +1,7 @@
-
-
 import '../../dominian/chat.dart';
 
-abstract class ChatRepository {
+
+abstract class ChatDataSource {
   Future<List<Chat>> getChats();
 
   Future<void> toggleFavorite(int id);

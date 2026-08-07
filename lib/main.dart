@@ -4,7 +4,7 @@ import 'features/chat/presentation/pages/HomeView.dart';
 
 void main() {
   runApp(
-    const Provider(
+    const ProviderScope(
       child: MyApp(),
     ),
   );
