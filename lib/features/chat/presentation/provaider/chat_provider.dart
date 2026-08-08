@@ -2,49 +2,55 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../dominian/chat.dart';
 import '../../dominian/repositories/chat_repository.dart';
-import 'repository_provider.dart';
 
-class ChatNotifier extends AsyncNotifier<List<Chat>> {
-  late final ChatRepository repository;
+class ChatNotifier extends StateNotifier<List<Chat>> {
+  final ChatRepository repository;
 
-  @override
-  Future<List<Chat>> build() async {
-    repository = ref.read(repositoryProvider);
+  ChatNotifier({required this.repository}) : super([]);
 
-    return await repository.getChats();
+  Future<void> loadChats() async {
+    state = await repository.getChats();
   }
 
-  Future<void> toggleFavorite(int id) async {
-    await repository.toggleFavorite(id);
-
-    state = AsyncData(await repository.getChats());
-  }
-
-  Future<void> toggleRead(int id) async {
-    await repository.toggleRead(id);
-
-    state = AsyncData(await repository.getChats());
+  Future<void> addChat(Chat chat) async {
+    await repository.addChat(chat);
+    await loadChats();
   }
 
   Future<void> deleteChat(int id) async {
     await repository.deleteChat(id);
 
-    state = AsyncData(await repository.getChats());
+    state = [
+      for (final chat in state)
+        if (chat.id != id) chat,
+    ];
   }
 
-  Future<void> addChat(Chat chat) async {
-    await repository.addChat(chat);
+  Future<void> toggleFavorite(int id) async {
+    await repository.toggleFavorite(id);
 
-    state = AsyncData(await repository.getChats());
+    _updateChatInState(
+      id,
+      (chat) => chat.copyWith(isFavorite: !chat.isFavorite),
+    );
+  }
+
+  Future<void> toggleRead(int id) async {
+    await repository.toggleRead(id);
+
+    _updateChatInState(id, (chat) => chat.copyWith(isRead: !chat.isRead));
   }
 
   Future<void> toggleArchived(int id) async {
     await repository.toggleArchived(id);
-    state =  AsyncData(await repository.getChats());
+
+    _updateChatInState(
+      id,
+      (chat) => chat.copyWith(isArchived: !chat.isArchived),
+    );
+  }
+
+  void _updateChatInState(int id, Chat Function(Chat chat) update) {
+    state = [for (final chat in state) chat.id == id ? update(chat) : chat];
   }
 }
-
-final chatProvider =
-AsyncNotifierProvider<ChatNotifier, List<Chat>>(
-  ChatNotifier.new,
-);
