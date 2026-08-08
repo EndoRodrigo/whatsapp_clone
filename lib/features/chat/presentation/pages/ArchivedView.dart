@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../provaider/chat_provider.dart';
 import '../widgets/chat_tile.dart';
+import '../widgets/detail_view.dart';
 
 class ArchivedView extends ConsumerWidget {
   const ArchivedView({super.key});
@@ -62,5 +63,4 @@ class ArchivedView extends ConsumerWidget {
       ),
     );
   }
-}``
-`
+}

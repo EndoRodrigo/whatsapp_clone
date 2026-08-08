@@ -40,12 +40,12 @@ class SQLiteChatDataSource implements ChatDataSource {
 
   @override
   Future<void> toggleFavorite(int id) async {
-    _updateChat(id, (chat) => chat.copyWith(isFavorite: !chat.isFavorite),);
+    _updateChat(id, (chat) => chat.copyWith(isFavorite: !chat.isFavorite));
   }
 
   @override
   Future<void> toggleRead(int id) async {
-    _updateChat(id, (chat) => chat.copyWith(isRead: true),);
+    _updateChat(id, (chat) => chat.copyWith(isRead: true));
   }
 
   @override
@@ -70,5 +70,18 @@ class SQLiteChatDataSource implements ChatDataSource {
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  @override
+  Future<List<Chat>> getArchivedChats() async{
+    final db = await appDatabase.database;
+    final result = await db.query(
+      'chats',
+      where: 'isArchived = ?',
+      whereArgs: [1],
+    );
+    return result.map((data) {
+      return Chat.fromMap(data);
+    }).toList();
   }
 }

@@ -51,4 +51,10 @@ class MockChatDataSource implements ChatDataSource {
     // TODO: implement toggleArchived
     throw UnimplementedError();
   }
+
+  @override
+  Future<List<Chat>> getArchivedChats() {
+    // TODO: implement getArchivedChats
+    throw UnimplementedError();
+  }
 }
