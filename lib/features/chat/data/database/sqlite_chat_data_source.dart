@@ -1,0 +1,87 @@
+import 'package:whatsapp_clone/features/chat/dominian/chat.dart';
+
+import '../chat_mock.dart';
+import '../datasources/chat_datasource.dart';
+import 'app_database.dart';
+
+class SQLiteChatDataSource implements ChatDataSource {
+  final AppDatabase appDatabase;
+
+  SQLiteChatDataSource({required this.appDatabase});
+
+  @override
+  Future<void> addChat(Chat chat) async {
+    final db = await appDatabase.database;
+    await db.insert('chats', chat.toMap());
+  }
+
+  @override
+  Future<void> deleteChat(int id) async {
+    final db = await appDatabase.database;
+    await db.delete('chats', where: 'id = ?', whereArgs: [id]);
+  }
+
+  @override
+  Future<List<Chat>> getChats() async {
+    final db = await appDatabase.database;
+
+    var result = await db.query('chats');
+
+    if (result.isEmpty) {
+      for (final chat in mockChats) {
+        await db.insert('chats', chat.toMap());
+      }
+
+      result = await db.query('chats');
+    }
+
+    return result.map((map) => Chat.fromMap(map)).toList();
+  }
+
+  @override
+  Future<void> toggleFavorite(int id) async {
+    _updateChat(id, (chat) => chat.copyWith(isFavorite: !chat.isFavorite));
+  }
+
+  @override
+  Future<void> toggleRead(int id) async {
+    _updateChat(id, (chat) => chat.copyWith(isRead: true));
+  }
+
+  @override
+  Future<void> toggleArchived(int id) async {
+    return _updateChat(
+      id,
+      (chat) => chat.copyWith(isArchived: !chat.isArchived),
+    );
+  }
+
+  Future<void> _updateChat(int id, Chat Function(Chat chat) update) async {
+    final db = await appDatabase.database;
+    final result = await db.query('chats', where: 'id = ?', whereArgs: [id]);
+    if (result.isEmpty) {
+      return;
+    }
+    final chat = Chat.fromMap(result.first);
+    final updatedChat = update(chat);
+    await db.update(
+      'chats',
+      updatedChat.toMap(),
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  @override
+  Future<List<Chat>> getArchivedChats() async{
+    final db = await appDatabase.database;
+    final result = await db.query(
+      'chats',
+      where: 'isArchived = ?',
+      whereArgs: [1],
+    );
+    return result.map((data) {
+      return Chat.fromMap(data);
+    }).toList();
+  }
+}
