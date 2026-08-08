@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'features/chat/presentation/pages/HomeView.dart';
+import 'features/chat/presentation/pages/home_view.dart';
 
 void main() {
   runApp(
