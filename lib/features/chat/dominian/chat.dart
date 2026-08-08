@@ -6,6 +6,7 @@ class Chat {
   final bool isFavorite;
   final bool isRead;
   final String? photoUrl;
+  final bool isArchived;
 
   Chat({
     required this.id,
@@ -15,6 +16,7 @@ class Chat {
     this.isFavorite = false,
     this.isRead = false,
     this.photoUrl,
+    this.isArchived = false,
   });
 
   Chat copyWith({
@@ -25,6 +27,7 @@ class Chat {
     bool? isFavorite,
     bool? isRead,
     String? photoUrl,
+    bool? isArchived,
   }) {
     return Chat(
       id: id ?? this.id,
@@ -34,6 +37,7 @@ class Chat {
       isFavorite: isFavorite ?? this.isFavorite,
       isRead: isRead ?? this.isRead,
       photoUrl: photoUrl ?? this.photoUrl,
+      isArchived: isArchived ?? this.isArchived,
     );
   }
 
@@ -46,6 +50,7 @@ class Chat {
       isFavorite: map['isFavorite'] == 1,
       isRead: map['isRead'] == 1,
       photoUrl: map['photoUrl'] as String?,
+      isArchived: map['isArchived'] == 1,
     );
   }
 
@@ -58,6 +63,7 @@ class Chat {
       'isFavorite': isFavorite ? 1 : 0,
       'isRead': isRead ? 1 : 0,
       'photoUrl': photoUrl,
+      'isArchived': isArchived ? 1 : 0,
     };
   }
 }
