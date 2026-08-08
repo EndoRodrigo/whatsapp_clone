@@ -35,4 +35,9 @@ class ChatRepositoryImpl implements ChatRepository {
   Future<void> addChat(Chat chat) {
     return dataSource.addChat(chat);
   }
+
+  @override
+  Future<void> toggleArchived(int id) {
+    return dataSource.toggleArchived(id);
+  }
 }

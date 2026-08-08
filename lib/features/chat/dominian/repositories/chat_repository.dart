@@ -10,4 +10,7 @@ abstract class ChatRepository {
   Future<void> deleteChat(int id);
 
   Future<void> addChat(Chat chat);
+
+  Future<void> toggleArchived(int id);
+
 }

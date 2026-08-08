@@ -37,6 +37,11 @@ class ChatNotifier extends AsyncNotifier<List<Chat>> {
 
     state = AsyncData(await repository.getChats());
   }
+
+  Future<void> toggleArchived(int id) async {
+    await repository.toggleArchived(id);
+    state =  AsyncData(await repository.getChats());
+  }
 }
 
 final chatProvider =

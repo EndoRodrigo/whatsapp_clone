@@ -77,4 +77,14 @@ class SQLiteChatDataSource implements ChatDataSource {
       whereArgs: [id],
     );
   }
+
+  @override
+  Future<void> toggleArchived(int id) async {
+    final db = await appDatabase.database;
+    final result = await db.query('chats', where: 'id=?', whereArgs: [id]);
+    if(result.isEmpty) return;
+    final chat = Chat.fromMap(result.first);
+    final updateChat = chat.copyWith( isArchived: !chat.isArchived);
+    await db.update('chats', updateChat.toMap(), where: 'id=?', whereArgs: [id]);
+  }
 }
