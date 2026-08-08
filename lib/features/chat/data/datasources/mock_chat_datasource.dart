@@ -45,4 +45,10 @@ class MockChatDataSource implements ChatDataSource {
   Future<void> addChat(Chat chat) async {
     _chats = [..._chats, chat];
   }
+
+  @override
+  Future<void> toggleArchived(int id) {
+    // TODO: implement toggleArchived
+    throw UnimplementedError();
+  }
 }

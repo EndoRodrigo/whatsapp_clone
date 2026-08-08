@@ -40,51 +40,35 @@ class SQLiteChatDataSource implements ChatDataSource {
 
   @override
   Future<void> toggleFavorite(int id) async {
-    final db = await appDatabase.database;
-
-    final result = await db.query('chats', where: 'id = ?', whereArgs: [id]);
-
-    if (result.isEmpty) return;
-
-    final chat = Chat.fromMap(result.first);
-
-    final updatedChat = chat.copyWith(isFavorite: !chat.isFavorite);
-
-    await db.update(
-      'chats',
-      updatedChat.toMap(),
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    _updateChat(id, (chat) => chat.copyWith(isFavorite: !chat.isFavorite),);
   }
 
   @override
   Future<void> toggleRead(int id) async {
+    _updateChat(id, (chat) => chat.copyWith(isRead: true),);
+  }
+
+  @override
+  Future<void> toggleArchived(int id) async {
+    return _updateChat(
+      id,
+      (chat) => chat.copyWith(isArchived: !chat.isArchived),
+    );
+  }
+
+  Future<void> _updateChat(int id, Chat Function(Chat chat) update) async {
     final db = await appDatabase.database;
-
     final result = await db.query('chats', where: 'id = ?', whereArgs: [id]);
-
-    if (result.isEmpty) return;
-
+    if (result.isEmpty) {
+      return;
+    }
     final chat = Chat.fromMap(result.first);
-
-    final updatedChat = chat.copyWith(isRead: true);
-
+    final updatedChat = update(chat);
     await db.update(
       'chats',
       updatedChat.toMap(),
       where: 'id = ?',
       whereArgs: [id],
     );
-  }
-
-  @override
-  Future<void> toggleArchived(int id) async {
-    final db = await appDatabase.database;
-    final result = await db.query('chats', where: 'id=?', whereArgs: [id]);
-    if(result.isEmpty) return;
-    final chat = Chat.fromMap(result.first);
-    final updateChat = chat.copyWith( isArchived: !chat.isArchived);
-    await db.update('chats', updateChat.toMap(), where: 'id=?', whereArgs: [id]);
   }
 }
