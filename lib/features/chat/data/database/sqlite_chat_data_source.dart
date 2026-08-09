@@ -50,7 +50,7 @@ class SQLiteChatDataSource implements ChatDataSource {
 
   @override
   Future<void> toggleRead(int id) async {
-    await _updateChat(id, (chat) => chat.copyWith(isRead: true));
+    await _updateChat(id, (chat) => chat.copyWith(isRead: !chat.isRead));
   }
 
   @override
