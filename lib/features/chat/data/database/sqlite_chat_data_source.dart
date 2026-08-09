@@ -12,12 +12,14 @@ class SQLiteChatDataSource implements ChatDataSource {
   @override
   Future<void> addChat(Chat chat) async {
     final db = await appDatabase.database;
+
     await db.insert('chats', chat.toMap());
   }
 
   @override
   Future<void> deleteChat(int id) async {
     final db = await appDatabase.database;
+
     await db.delete('chats', where: 'id = ?', whereArgs: [id]);
   }
 
@@ -40,17 +42,20 @@ class SQLiteChatDataSource implements ChatDataSource {
 
   @override
   Future<void> toggleFavorite(int id) async {
-    _updateChat(id, (chat) => chat.copyWith(isFavorite: !chat.isFavorite));
+    await _updateChat(
+      id,
+      (chat) => chat.copyWith(isFavorite: !chat.isFavorite),
+    );
   }
 
   @override
   Future<void> toggleRead(int id) async {
-    _updateChat(id, (chat) => chat.copyWith(isRead: true));
+    await _updateChat(id, (chat) => chat.copyWith(isRead: true));
   }
 
   @override
   Future<void> toggleArchived(int id) async {
-    return _updateChat(
+    await _updateChat(
       id,
       (chat) => chat.copyWith(isArchived: !chat.isArchived),
     );
@@ -58,12 +63,17 @@ class SQLiteChatDataSource implements ChatDataSource {
 
   Future<void> _updateChat(int id, Chat Function(Chat chat) update) async {
     final db = await appDatabase.database;
+
     final result = await db.query('chats', where: 'id = ?', whereArgs: [id]);
+
     if (result.isEmpty) {
       return;
     }
+
     final chat = Chat.fromMap(result.first);
+
     final updatedChat = update(chat);
+
     await db.update(
       'chats',
       updatedChat.toMap(),
@@ -73,15 +83,15 @@ class SQLiteChatDataSource implements ChatDataSource {
   }
 
   @override
-  Future<List<Chat>> getArchivedChats() async{
+  Future<List<Chat>> getArchivedChats() async {
     final db = await appDatabase.database;
+
     final result = await db.query(
       'chats',
       where: 'isArchived = ?',
       whereArgs: [1],
     );
-    return result.map((data) {
-      return Chat.fromMap(data);
-    }).toList();
+
+    return result.map((data) => Chat.fromMap(data)).toList();
   }
 }

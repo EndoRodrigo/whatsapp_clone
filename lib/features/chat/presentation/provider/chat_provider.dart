@@ -9,9 +9,7 @@ import '../../dominian/repositories/chat_repository.dart';
 class ChatProvider extends StateNotifier<List<Chat>> {
   final ChatRepository repository;
 
-  ChatProvider({
-    required this.repository,
-  }) : super([]);
+  ChatProvider({required this.repository}) : super([]);
 
   Future<void> loadChats() async {
     state = await repository.getChats();
@@ -36,23 +34,14 @@ class ChatProvider extends StateNotifier<List<Chat>> {
 
     _updateChatInState(
       id,
-          (chat) =>
-          chat.copyWith(
-            isFavorite: !chat.isFavorite,
-          ),
+      (chat) => chat.copyWith(isFavorite: !chat.isFavorite),
     );
   }
 
   Future<void> toggleRead(int id) async {
     await repository.toggleRead(id);
 
-    _updateChatInState(
-      id,
-          (chat) =>
-          chat.copyWith(
-            isRead: !chat.isRead,
-          ),
-    );
+    _updateChatInState(id, (chat) => chat.copyWith(isRead: !chat.isRead));
   }
 
   Future<void> toggleArchived(int id) async {
@@ -60,37 +49,21 @@ class ChatProvider extends StateNotifier<List<Chat>> {
 
     _updateChatInState(
       id,
-          (chat) =>
-          chat.copyWith(
-            isArchived: !chat.isArchived,
-          ),
+      (chat) => chat.copyWith(isArchived: !chat.isArchived),
     );
   }
 
-  void _updateChatInState(int id,
-      Chat Function(Chat chat) update,) {
-    state = [
-      for (final chat in state)
-        chat.id == id ? update(chat) : chat,
-    ];
+  void _updateChatInState(int id, Chat Function(Chat chat) update) {
+    state = [for (final chat in state) chat.id == id ? update(chat) : chat];
   }
 }
 
-final chatProvider =
-StateNotifierProvider<ChatProvider, List<Chat>>(
-      (ref) {
-    final appDatabase = AppDatabase();
+final chatProvider = StateNotifierProvider<ChatProvider, List<Chat>>((ref) {
+  final appDatabase = AppDatabase();
 
-    final dataSource = SQLiteChatDataSource(
-      appDatabase: appDatabase,
-    );
+  final dataSource = SQLiteChatDataSource(appDatabase: appDatabase);
 
-    final repository = ChatRepositoryImpl(
-      dataSource: dataSource,
-    );
+  final repository = ChatRepositoryImpl(dataSource: dataSource);
 
-    return ChatProvider(
-      repository: repository,
-    );
-  },
-);
+  return ChatProvider(repository: repository);
+});

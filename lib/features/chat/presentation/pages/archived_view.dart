@@ -12,20 +12,12 @@ class ArchivedView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final chats = ref.watch(chatProvider);
 
-    final archivedChats = chats
-        .where((chat) => chat.isArchived)
-        .toList();
+    final archivedChats = chats.where((chat) => chat.isArchived).toList();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Chats archivados'),
-      ),
+      appBar: AppBar(title: const Text('Chats archivados')),
       body: archivedChats.isEmpty
-          ? const Center(
-              child: Text(
-                'No hay chats archivados',
-              ),
-            )
+          ? const Center(child: Text('No hay chats archivados'))
           : ListView.builder(
               itemCount: archivedChats.length,
               itemBuilder: (context, index) {
@@ -37,9 +29,7 @@ class ArchivedView extends ConsumerWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => DetailView(
-                          chat: chat,
-                        ),
+                        builder: (context) => DetailView(chat: chat),
                       ),
                     );
                   },

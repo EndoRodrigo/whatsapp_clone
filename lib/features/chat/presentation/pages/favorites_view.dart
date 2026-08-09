@@ -15,9 +15,7 @@ class FavoritesView extends ConsumerWidget {
     final favorites = ref.watch(favoriteChatsProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Favoritos'),
-      ),
+      appBar: AppBar(title: const Text('Favoritos')),
       body: favorites.isEmpty
           ? const Center(
               child: Text(
@@ -43,36 +41,22 @@ class FavoritesView extends ConsumerWidget {
     );
   }
 
-  void _openChat(
-    BuildContext context,
-    WidgetRef ref,
-    Chat chat,
-  ) {
+  void _openChat(BuildContext context, WidgetRef ref, Chat chat) {
     ref.read(chatProvider.notifier).toggleRead(chat.id);
 
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => DetailView(chat: chat),
-      ),
+      MaterialPageRoute(builder: (_) => DetailView(chat: chat)),
     );
   }
 
-  void _toggleFavorite(
-    BuildContext context,
-    WidgetRef ref,
-    Chat chat,
-  ) {
+  void _toggleFavorite(BuildContext context, WidgetRef ref, Chat chat) {
     ref.read(chatProvider.notifier).toggleFavorite(chat.id);
 
     ScaffoldMessenger.of(context)
       ..clearSnackBars()
       ..showSnackBar(
-        SnackBar(
-          content: Text(
-            '${chat.name} actualizado en favoritos',
-          ),
-        ),
+        SnackBar(content: Text('${chat.name} actualizado en favoritos')),
       );
   }
 }
