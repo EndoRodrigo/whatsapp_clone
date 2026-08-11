@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:whatsapp_clone/features/chat/dominian/chat.dart';
 
 import '../provider/chat_provider.dart';
 import '../widgets/chat_tile.dart';
@@ -56,21 +57,28 @@ class _HomeViewState extends ConsumerState<HomeView> {
               itemCount: activeChats.length,
               itemBuilder: (context, index) {
                 final chat = activeChats[index];
-                return ChatTile(
-                  chat: chat,
-                  onTap: () {
-                    ref.read(chatProvider.notifier).toggleRead(chat.id);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => DetailView(chat: chat)),
-                    );
+                return InkWell(
+                  onLongPress: () {
+                    _showDeleteDialog(context, ref, chat);
                   },
-                  onDoubleTap: () {
-                    ref.read(chatProvider.notifier).toggleFavorite(chat.id);
-                  },
-                  onArchive: () {
-                    ref.read(chatProvider.notifier).toggleArchived(chat.id);
-                  },
+                  child: ChatTile(
+                    chat: chat,
+                    onTap: () {
+                      ref.read(chatProvider.notifier).toggleRead(chat.id!);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailView(chat: chat),
+                        ),
+                      );
+                    },
+                    onDoubleTap: () {
+                      ref.read(chatProvider.notifier).toggleFavorite(chat.id!);
+                    },
+                    onArchive: () {
+                      ref.read(chatProvider.notifier).toggleArchived(chat.id!);
+                    },
+                  ),
                 );
               },
             ),
@@ -82,4 +90,49 @@ class _HomeViewState extends ConsumerState<HomeView> {
       ),
     );
   }
+}
+
+Future<void> _showDeleteDialog(
+  BuildContext context,
+  WidgetRef ref,
+  Chat chat,
+) async {
+  await showDialog(
+    context: context,
+    builder: (_) {
+      return AlertDialog(
+        title: const Text('Eliminar conversación'),
+        content: Text('¿Deseas eliminar la conversación con ${chat.name}?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () {
+              ref.read(chatProvider.notifier).deleteChat(chat.id!);
+
+              Navigator.pop(context);
+
+              showCustomSnackBar(context, 'Conversación eliminada');
+            },
+            child: const Text('Eliminar'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+///------------------------------------------------------------
+/// SnackBar reutilizable
+///------------------------------------------------------------
+void showCustomSnackBar(BuildContext context, String message) {
+  ScaffoldMessenger.of(context).clearSnackBars();
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text(message), duration: const Duration(seconds: 2)),
+  );
 }

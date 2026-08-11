@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+
 import '../../dominian/chat.dart';
 
 class ChatTile extends StatelessWidget {
@@ -44,8 +45,8 @@ class ChatTile extends StatelessWidget {
           chat.isArchived
               ? 'Archivado'
               : chat.isRead
-                  ? 'Leído'
-                  : 'No leído',
+              ? 'Leído'
+              : 'No leído',
         ),
         onTap: onTap,
         trailing: PopupMenuButton<String>(
@@ -73,3 +74,4 @@ class ChatTile extends StatelessWidget {
     );
   }
 }
+

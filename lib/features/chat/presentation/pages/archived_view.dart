@@ -34,10 +34,10 @@ class ArchivedView extends ConsumerWidget {
                     );
                   },
                   onDoubleTap: () {
-                    ref.read(chatProvider.notifier).toggleFavorite(chat.id);
+                    ref.read(chatProvider.notifier).toggleFavorite(chat.id!);
                   },
                   onArchive: () {
-                    ref.read(chatProvider.notifier).toggleArchived(chat.id);
+                    ref.read(chatProvider.notifier).toggleArchived(chat.id!);
                   },
                 );
               },

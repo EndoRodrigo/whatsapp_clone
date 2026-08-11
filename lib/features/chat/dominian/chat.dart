@@ -1,5 +1,5 @@
 class Chat {
-  final int id;
+  final int? id;
   final String name;
   final String lastMessage;
   final String hour;
@@ -9,7 +9,7 @@ class Chat {
   final bool isArchived;
 
   Chat({
-    required this.id,
+    this.id,
     required this.name,
     required this.lastMessage,
     required this.hour,

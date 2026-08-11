@@ -33,7 +33,7 @@ class FavoritesView extends ConsumerWidget {
                   onTap: () => _openChat(context, ref, chat),
                   onDoubleTap: () => _toggleFavorite(context, ref, chat),
                   onArchive: () {
-                    ref.read(chatProvider.notifier).toggleArchived(chat.id);
+                    ref.read(chatProvider.notifier).toggleArchived(chat.id!);
                   },
                 );
               },
@@ -42,7 +42,7 @@ class FavoritesView extends ConsumerWidget {
   }
 
   void _openChat(BuildContext context, WidgetRef ref, Chat chat) {
-    ref.read(chatProvider.notifier).toggleRead(chat.id);
+    ref.read(chatProvider.notifier).toggleRead(chat.id!);
 
     Navigator.push(
       context,
@@ -51,7 +51,7 @@ class FavoritesView extends ConsumerWidget {
   }
 
   void _toggleFavorite(BuildContext context, WidgetRef ref, Chat chat) {
-    ref.read(chatProvider.notifier).toggleFavorite(chat.id);
+    ref.read(chatProvider.notifier).toggleFavorite(chat.id!);
 
     ScaffoldMessenger.of(context)
       ..clearSnackBars()
