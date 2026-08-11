@@ -9,12 +9,16 @@ class SQLiteChatDataSource implements ChatDataSource {
 
   SQLiteChatDataSource({required this.appDatabase});
 
-  @override
-  Future<void> addChat(Chat chat) async {
-    final db = await appDatabase.database;
+  Future<Chat> addChat(Chat chat) async {
+  final db = await appDatabase.database;
 
-    await db.insert('chats', chat.toMap());
-  }
+  final id = await db.insert(
+    'chats',
+    chat.toMap(),
+  );
+
+  return chat.copyWith(id: id);
+}
 
   @override
   Future<void> deleteChat(int id) async {

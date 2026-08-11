@@ -55,15 +55,20 @@ class Chat {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'lastMessage': lastMessage,
-      'hour': hour,
-      'isFavorite': isFavorite ? 1 : 0,
-      'isRead': isRead ? 1 : 0,
-      'photoUrl': photoUrl,
-      'isArchived': isArchived ? 1 : 0,
-    };
+  final map = <String, dynamic>{
+    'name': name,
+    'lastMessage': lastMessage,
+    'hour': hour,
+    'isFavorite': isFavorite ? 1 : 0,
+    'isRead': isRead ? 1 : 0,
+    'photoUrl': photoUrl,
+    'isArchived': isArchived ? 1 : 0,
+  };
+
+  if (id != null) {
+    map['id'] = id;
   }
+
+  return map;
+}
 }
