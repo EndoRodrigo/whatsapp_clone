@@ -76,7 +76,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       ref.read(chatProvider.notifier).toggleFavorite(chat.id!);
                     },
                     onArchive: () {
-                      ref.read(chatProvider.notifier).toggleArchived(chat.id!);
+                      //ref.read(chatProvider.notifier).toggleArchived(chat.id!);
                     },
                   ),
                 );
@@ -84,7 +84,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // TODO: Implement add chat
+          ref.read(chatProvider.notifier).addChat(Chat(name: 'Endo', lastMessage: 'Bienvenido al clon de whasap', hour: '10:30'));
         },
         child: const Icon(Icons.message),
       ),

@@ -5,7 +5,7 @@ abstract class ChatRepository {
 
   Future<List<Chat>> getArchivedChats();
 
-  Future<void> addChat(Chat chat);
+  Future<Chat> addChat(Chat chat);
 
   Future<void> deleteChat(int id);
 
@@ -13,6 +13,5 @@ abstract class ChatRepository {
 
   Future<void> toggleRead(int id);
 
-  Future<void> toggleArchived(int id);
 
 }

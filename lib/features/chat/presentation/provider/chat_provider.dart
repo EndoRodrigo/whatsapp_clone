@@ -16,9 +16,13 @@ class ChatProvider extends StateNotifier<List<Chat>> {
   }
 
   Future<void> addChat(Chat chat) async {
-    await repository.addChat(chat);
-    await loadChats();
-  }
+  final newChat = await repository.addChat(chat);
+
+  state = [
+    ...state,
+    newChat,
+  ];
+}
 
   Future<void> deleteChat(int id) async {
     await repository.deleteChat(id);
@@ -44,14 +48,6 @@ class ChatProvider extends StateNotifier<List<Chat>> {
     _updateChatInState(id, (chat) => chat.copyWith(isRead: !chat.isRead));
   }
 
-  Future<void> toggleArchived(int id) async {
-    await repository.toggleArchived(id);
-
-    _updateChatInState(
-      id,
-      (chat) => chat.copyWith(isArchived: !chat.isArchived),
-    );
-  }
 
   void _updateChatInState(int id, Chat Function(Chat chat) update) {
     state = [for (final chat in state) chat.id == id ? update(chat) : chat];
