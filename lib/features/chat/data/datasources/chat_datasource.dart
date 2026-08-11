@@ -3,8 +3,6 @@ import '../../dominian/chat.dart';
 abstract class ChatDataSource {
   Future<List<Chat>> getChats();
 
-  Future<List<Chat>> getArchivedChats();
-
   Future<Chat> addChat(Chat chat);
 
   Future<void> deleteChat(int id);
@@ -12,5 +10,7 @@ abstract class ChatDataSource {
   Future<void> toggleFavorite(int id);
 
   Future<void> toggleRead(int id);
+
+  Future<void> toggleArchived(int id);
 
 }

@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../data/database/sqlite_chat_data_source.dart';
 import '../../data/database/app_database.dart';
+import '../../data/database/sqlite_chat_data_source.dart';
 import '../../data/repositories/chat_repository_impl.dart';
 import '../../dominian/chat.dart';
 import '../../dominian/repositories/chat_repository.dart';
@@ -16,13 +16,10 @@ class ChatProvider extends StateNotifier<List<Chat>> {
   }
 
   Future<void> addChat(Chat chat) async {
-  final newChat = await repository.addChat(chat);
+    final newChat = await repository.addChat(chat);
 
-  state = [
-    ...state,
-    newChat,
-  ];
-}
+    state = [...state, newChat];
+  }
 
   Future<void> deleteChat(int id) async {
     await repository.deleteChat(id);
@@ -48,18 +45,36 @@ class ChatProvider extends StateNotifier<List<Chat>> {
     _updateChatInState(id, (chat) => chat.copyWith(isRead: !chat.isRead));
   }
 
+  Future<void> toggleArchived(int id) async {
+    await repository.toggleArchived(id);
+    _updateChatInState(
+      id,
+      (chat) => chat.copyWith(isArchived: !chat.isArchived),
+    );
+  }
 
   void _updateChatInState(int id, Chat Function(Chat chat) update) {
     state = [for (final chat in state) chat.id == id ? update(chat) : chat];
   }
 }
 
+final appDatabaseProvider = Provider<AppDatabase>((ref) {
+  return AppDatabase();
+});
+
+final chatDataSourceProvider = Provider<SQLiteChatDataSource>((ref) {
+  final database = ref.read(appDatabaseProvider);
+
+  return SQLiteChatDataSource(appDatabase: database);
+});
+
+final chatRepositoryProvider = Provider<ChatRepository>((ref) {
+  final dataSource = ref.read(chatDataSourceProvider);
+  return ChatRepositoryImpl(dataSource: dataSource);
+});
+
 final chatProvider = StateNotifierProvider<ChatProvider, List<Chat>>((ref) {
-  final appDatabase = AppDatabase();
-
-  final dataSource = SQLiteChatDataSource(appDatabase: appDatabase);
-
-  final repository = ChatRepositoryImpl(dataSource: dataSource);
+  final repository = ref.read(chatRepositoryProvider);
 
   return ChatProvider(repository: repository);
 });

@@ -33,7 +33,7 @@ class FavoritesView extends ConsumerWidget {
                   onTap: () => _openChat(context, ref, chat),
                   onDoubleTap: () => _toggleFavorite(context, ref, chat),
                   onArchive: () {
-                    //ref.read(chatProvider.notifier).toggleArchived(chat.id!);
+                    ref.read(chatProvider.notifier).toggleArchived(chat.id!);
                   },
                 );
               },
