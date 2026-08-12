@@ -37,9 +37,12 @@ class ChatProvider extends StateNotifier<List<Chat>> {
   }
 
   Future<void> toggleRead(int id) async {
-    final updatedChat = await repository.toggleRead(id);
-
-    _replaceChatInState(updatedChat);
+    try {
+      final updatedChat = await repository.toggleRead(id);
+      _replaceChatInState(updatedChat);
+    } catch (e) {
+      print('Error al actualizar favorito: $e');
+    }
   }
 
   Future<void> toggleArchived(int id) async {
