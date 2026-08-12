@@ -45,11 +45,18 @@ class SQLiteChatDataSource implements ChatDataSource {
   }
 
   @override
-  Future<void> toggleFavorite(int id) async {
-    await _updateChat(
+  Future<Chat> toggleFavorite(int id) async {
+
+    final updateChat = await _updateChat(
       id,
       (chat) => chat.copyWith(isFavorite: !chat.isFavorite),
     );
+
+    if(updateChat == null){
+      throw Exception('Chat con id $id no encontrado');
+    }
+
+    return updateChat;
   }
 
   @override
@@ -65,13 +72,13 @@ class SQLiteChatDataSource implements ChatDataSource {
     );
   }
 
-  Future<void> _updateChat(int id, Chat Function(Chat chat) update) async {
+  Future<Chat?> _updateChat(int id, Chat Function(Chat chat) update) async {
     final db = await appDatabase.database;
 
     final result = await db.query('chats', where: 'id = ?', whereArgs: [id]);
 
     if (result.isEmpty) {
-      return;
+      return null;
     }
 
     final chat = Chat.fromMap(result.first);
@@ -84,5 +91,7 @@ class SQLiteChatDataSource implements ChatDataSource {
       where: 'id = ?',
       whereArgs: [id],
     );
+
+    return updatedChat;
   }
 }

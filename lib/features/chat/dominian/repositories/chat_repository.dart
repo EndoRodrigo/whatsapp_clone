@@ -7,7 +7,7 @@ abstract class ChatRepository {
 
   Future<void> deleteChat(int id);
 
-  Future<void> toggleFavorite(int id);
+  Future<Chat> toggleFavorite(int id);
 
   Future<void> toggleRead(int id);
 

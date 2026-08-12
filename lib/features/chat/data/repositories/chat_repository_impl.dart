@@ -17,7 +17,7 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Future<void> toggleFavorite(int id) {
+  Future<Chat> toggleFavorite(int id) {
     return dataSource.toggleFavorite(id);
   }
 
