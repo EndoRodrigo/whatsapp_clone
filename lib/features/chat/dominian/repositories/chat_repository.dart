@@ -9,8 +9,8 @@ abstract class ChatRepository {
 
   Future<Chat> toggleFavorite(int id);
 
-  Future<void> toggleRead(int id);
+  Future<Chat> toggleRead(int id);
 
-  Future<void> toggleArchived(int id);
+  Future<Chat> toggleArchived(int id);
 
 }

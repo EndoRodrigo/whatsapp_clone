@@ -31,30 +31,30 @@ class ChatProvider extends StateNotifier<List<Chat>> {
   }
 
   Future<void> toggleFavorite(int id) async {
-    await repository.toggleFavorite(id);
+    final updatedChat = await repository.toggleFavorite(id);
 
-    _updateChatInState(
-      id,
-      (chat) => chat.copyWith(isFavorite: !chat.isFavorite),
-    );
+    _replaceChatInState(updatedChat);
   }
 
   Future<void> toggleRead(int id) async {
-    await repository.toggleRead(id);
+    final updatedChat = await repository.toggleRead(id);
 
-    _updateChatInState(id, (chat) => chat.copyWith(isRead: !chat.isRead));
+    _replaceChatInState(updatedChat);
   }
 
   Future<void> toggleArchived(int id) async {
-    await repository.toggleArchived(id);
-    _updateChatInState(
-      id,
-      (chat) => chat.copyWith(isArchived: !chat.isArchived),
-    );
+    final updatedChat = await repository.toggleArchived(id);
+    _replaceChatInState(updatedChat);
   }
 
-  void _updateChatInState(int id, Chat Function(Chat chat) update) {
+  /*void _updateChatInState(int id, Chat Function(Chat chat) update) {
     state = [for (final chat in state) chat.id == id ? update(chat) : chat];
+  }*/
+
+  void _replaceChatInState(Chat updatedChat) {
+    state = [
+      for (final chat in state) chat.id == updatedChat.id ? updatedChat : chat,
+    ];
   }
 }
 

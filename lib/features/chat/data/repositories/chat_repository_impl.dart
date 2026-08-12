@@ -22,7 +22,7 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Future<void> toggleRead(int id) {
+  Future<Chat> toggleRead(int id) {
     return dataSource.toggleRead(id);
   }
 
@@ -38,7 +38,7 @@ class ChatRepositoryImpl implements ChatRepository {
 
 
   @override
-  Future<void> toggleArchived(int id) {
+  Future<Chat> toggleArchived(int id) {
     return dataSource.toggleArchived(id);
   }
 }

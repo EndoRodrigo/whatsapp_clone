@@ -10,15 +10,12 @@ class SQLiteChatDataSource implements ChatDataSource {
   SQLiteChatDataSource({required this.appDatabase});
 
   Future<Chat> addChat(Chat chat) async {
-  final db = await appDatabase.database;
+    final db = await appDatabase.database;
 
-  final id = await db.insert(
-    'chats',
-    chat.toMap(),
-  );
+    final id = await db.insert('chats', chat.toMap());
 
-  return chat.copyWith(id: id);
-}
+    return chat.copyWith(id: id);
+  }
 
   @override
   Future<void> deleteChat(int id) async {
@@ -46,13 +43,12 @@ class SQLiteChatDataSource implements ChatDataSource {
 
   @override
   Future<Chat> toggleFavorite(int id) async {
-
     final updateChat = await _updateChat(
       id,
       (chat) => chat.copyWith(isFavorite: !chat.isFavorite),
     );
 
-    if(updateChat == null){
+    if (updateChat == null) {
       throw Exception('Chat con id $id no encontrado');
     }
 
@@ -60,16 +56,27 @@ class SQLiteChatDataSource implements ChatDataSource {
   }
 
   @override
-  Future<void> toggleRead(int id) async {
-    await _updateChat(id, (chat) => chat.copyWith(isRead: !chat.isRead));
+  Future<Chat> toggleRead(int id) async {
+    final updateChat = await _updateChat(id, (chat) => chat.copyWith(isRead: !chat.isRead));
+
+    if (updateChat == null) {
+      throw Exception('Chat con id $id no encontrado');
+    }
+
+    return updateChat;
   }
 
   @override
-  Future<void> toggleArchived(int id) async {
-    await _updateChat(
+  Future<Chat> toggleArchived(int id) async {
+    final updateChat = await _updateChat(
       id,
       (chat) => chat.copyWith(isArchived: !chat.isArchived),
     );
+    if (updateChat == null) {
+      throw Exception('Chat con id $id no encontrado');
+    }
+
+    return updateChat;
   }
 
   Future<Chat?> _updateChat(int id, Chat Function(Chat chat) update) async {
