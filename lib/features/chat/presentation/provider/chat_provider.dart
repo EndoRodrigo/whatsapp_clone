@@ -21,25 +21,35 @@ class ChatProvider extends StateNotifier<ChatState> {
 
       state = state.copyWith(chats: chats, isLoading: false);
     } catch (e) {
-      state = state.copyWith(isLoading: false, errorMessage: e.toString());
+      _handleError(e);
+
+      state = state.copyWith(isLoading: false);
     }
   }
 
   Future<void> addChat(Chat chat) async {
-    final newChat = await repository.addChat(chat);
+    try {
+      final newChat = await repository.addChat(chat);
 
-    state = state.copyWith(chats: [...state.chats, newChat]);
+      state = state.copyWith(chats: [...state.chats, newChat]);
+    } catch (e) {
+      _handleError(e);
+    }
   }
 
   Future<void> deleteChat(int id) async {
-    await repository.deleteChat(id);
+    try {
+      await repository.deleteChat(id);
 
-    state = state.copyWith(
-      chats: [
-        for (final chat in state.chats)
-          if (chat.id != id) chat,
-      ],
-    );
+      state = state.copyWith(
+        chats: [
+          for (final chat in state.chats)
+            if (chat.id != id) chat,
+        ],
+      );
+    } catch (e) {
+      _handleError(e);
+    }
   }
 
   Future<void> toggleFavorite(int id) async {
@@ -52,14 +62,9 @@ class ChatProvider extends StateNotifier<ChatState> {
 
       state = state.copyWith(isLoading: false);
     } catch (e) {
-      if (e is ChatException) {
-        state = state.copyWith(isLoading: false, errorMessage: e.error.message);
-        return;
-      }
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: 'Ocurrió un error inesperado.',
-      );
+      _handleError(e);
+
+      state = state.copyWith(isLoading: false);
     }
   }
 
@@ -69,7 +74,7 @@ class ChatProvider extends StateNotifier<ChatState> {
 
       _replaceChatInState(updatedChat);
     } catch (e) {
-      state = state.copyWith(errorMessage: e.toString());
+      _handleError(e);
     }
   }
 
@@ -79,7 +84,7 @@ class ChatProvider extends StateNotifier<ChatState> {
 
       _replaceChatInState(updatedChat);
     } catch (e) {
-      state = state.copyWith(errorMessage: e.toString());
+      _handleError(e);
     }
   }
 
@@ -93,11 +98,22 @@ class ChatProvider extends StateNotifier<ChatState> {
   }
 
   void clearError() {
-  state = state.copyWith(
-    errorMessage: null,
-  );
+    state = state.copyWith(errorMessage: null);
+  }
+
+  void _handleError(Object error) {
+    if (error is ChatException) {
+      state = state.copyWith(errorMessage: error.error.message);
+      return;
+    }
+
+    state = state.copyWith(errorMessage: 'Ocurrió un error inesperado.');
+  }
 }
-}
+
+// ------------------------------------------------------------
+// Providers
+// ------------------------------------------------------------
 
 final appDatabaseProvider = Provider<AppDatabase>((ref) {
   return AppDatabase();
