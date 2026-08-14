@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:whatsapp_clone/features/chat/dominian/exceptions/chat_exception.dart';
 import 'package:whatsapp_clone/features/chat/presentation/state/chat_state.dart';
 
 import '../../data/database/app_database.dart';
@@ -51,7 +52,14 @@ class ChatProvider extends StateNotifier<ChatState> {
 
       state = state.copyWith(isLoading: false);
     } catch (e) {
-      state = state.copyWith(isLoading: false, errorMessage: e.toString());
+      if (e is ChatException) {
+        state = state.copyWith(isLoading: false, errorMessage: e.error.message);
+        return;
+      }
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: 'Ocurrió un error inesperado.',
+      );
     }
   }
 
@@ -83,6 +91,12 @@ class ChatProvider extends StateNotifier<ChatState> {
       ],
     );
   }
+
+  void clearError() {
+  state = state.copyWith(
+    errorMessage: null,
+  );
+}
 }
 
 final appDatabaseProvider = Provider<AppDatabase>((ref) {

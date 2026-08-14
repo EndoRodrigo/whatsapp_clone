@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:whatsapp_clone/features/chat/dominian/chat.dart';
+import 'package:whatsapp_clone/features/chat/presentation/widgets/custom_snackbar.dart';
 
 import '../provider/chat_provider.dart';
 import '../widgets/chat_tile.dart';
@@ -126,13 +127,3 @@ Future<void> _showDeleteDialog(
   );
 }
 
-///------------------------------------------------------------
-/// SnackBar reutilizable
-///------------------------------------------------------------
-void showCustomSnackBar(BuildContext context, String message) {
-  ScaffoldMessenger.of(context).clearSnackBars();
-
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text(message), duration: const Duration(seconds: 2)),
-  );
-}
