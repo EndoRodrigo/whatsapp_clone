@@ -1,4 +1,4 @@
-
+import 'package:whatsapp_clone/features/chat/dominian/exceptions/chat_exception.dart';
 
 import '../../dominian/chat.dart';
 import '../../dominian/repositories/chat_repository.dart';
@@ -7,9 +7,7 @@ import '../datasources/chat_datasource.dart';
 class ChatRepositoryImpl implements ChatRepository {
   final ChatDataSource dataSource;
 
-  ChatRepositoryImpl({
-    required this.dataSource,
-  });
+  ChatRepositoryImpl({required this.dataSource});
 
   @override
   Future<List<Chat>> getChats() {
@@ -17,13 +15,21 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Future<Chat> toggleFavorite(int id) {
-    return dataSource.toggleFavorite(id);
+  Future<Chat> toggleFavorite(int id) async {
+    try {
+      return await dataSource.toggleFavorite(id);
+    } catch (e) {
+      throw ChatException(ChatError.update);
+    }
   }
 
   @override
-  Future<Chat> toggleRead(int id) {
-    return dataSource.toggleRead(id);
+  Future<Chat> toggleRead(int id) async {
+    try {
+      return await dataSource.toggleRead(id);
+    } catch (e) {
+       throw ChatException(ChatError.update);
+    }
   }
 
   @override
@@ -36,9 +42,12 @@ class ChatRepositoryImpl implements ChatRepository {
     return dataSource.addChat(chat);
   }
 
-
   @override
-  Future<Chat> toggleArchived(int id) {
-    return dataSource.toggleArchived(id);
+  Future<Chat> toggleArchived(int id) async {
+    try {
+      return await dataSource.toggleArchived(id);
+    } catch (e) {
+       throw ChatException(ChatError.update);
+    }
   }
 }

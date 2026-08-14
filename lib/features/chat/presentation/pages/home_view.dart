@@ -24,7 +24,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    final chats = ref.watch(chatProvider);
+    final chats = ref.watch(chatProvider).chats;
     final activeChats = chats.where((chat) => !chat.isArchived).toList();
 
     return Scaffold(

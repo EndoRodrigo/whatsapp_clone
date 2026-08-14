@@ -10,7 +10,7 @@ class ArchivedView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final chats = ref.watch(chatProvider);
+    final chats = ref.watch(chatProvider).chats;
 
     final archivedChats = chats.where((chat) => chat.isArchived).toList();
 

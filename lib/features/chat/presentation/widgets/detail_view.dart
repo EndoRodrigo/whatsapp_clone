@@ -14,7 +14,7 @@ class DetailView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final chats = ref.watch(chatProvider);
+    final chats = ref.watch(chatProvider).chats;
 
     final currentChat = chats.firstWhere(
       (c) => c.id == chat.id,
