@@ -12,7 +12,8 @@ class ChatErrorListener extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen<ChatState>(chatProvider, (previous, next) {
-      if (next.errorMessage != null) {
+      if (next.errorMessage != null &&
+          next.errorMessage != previous?.errorMessage) {
         showCustomSnackBar(context, next.errorMessage!);
 
         ref.read(chatProvider.notifier).clearError();
