@@ -1,4 +1,5 @@
 import 'package:whatsapp_clone/features/chat/dominian/chat.dart';
+import 'package:whatsapp_clone/features/chat/dominian/exceptions/chat_exception.dart';
 
 import '../chat_mock.dart';
 import '../datasources/chat_datasource.dart';
@@ -50,7 +51,7 @@ class SQLiteChatDataSource implements ChatDataSource {
     );
 
     if (updateChat == null) {
-      throw Exception('Chat con id $id no encontrado');
+      throw ChatException(ChatError.notFound);
     }
 
     return updateChat;
@@ -61,7 +62,7 @@ class SQLiteChatDataSource implements ChatDataSource {
     final updateChat = await _updateChat(id, (chat) => chat.copyWith(isRead: !chat.isRead));
 
     if (updateChat == null) {
-      throw Exception('Chat con id $id no encontrado');
+      throw ChatException(ChatError.notFound);
     }
 
     return updateChat;
@@ -74,7 +75,7 @@ class SQLiteChatDataSource implements ChatDataSource {
       (chat) => chat.copyWith(isArchived: !chat.isArchived),
     );
     if (updateChat == null) {
-      throw Exception('Chat con id $id no encontrado');
+      throw ChatException(ChatError.notFound);
     }
 
     return updateChat;

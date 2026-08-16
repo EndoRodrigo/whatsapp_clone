@@ -10,6 +10,7 @@ enum ChatError {
   network,
 }
 
+//Definicionde los mensajes de error
 extension ChatErrorMessage on ChatError {
   String get message {
     switch (this) {

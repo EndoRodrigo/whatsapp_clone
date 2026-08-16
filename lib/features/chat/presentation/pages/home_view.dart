@@ -74,7 +74,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       );
                     },
                     onDoubleTap: () {
-                      ref.read(chatProvider.notifier).toggleFavorite(chat.id!);
+                      //ref.read(chatProvider.notifier).toggleFavorite(chat.id!);
+                      ref.read(chatProvider.notifier).toggleFavorite(999);
                     },
                     onArchive: () {
                       ref.read(chatProvider.notifier).toggleArchived(chat.id!);

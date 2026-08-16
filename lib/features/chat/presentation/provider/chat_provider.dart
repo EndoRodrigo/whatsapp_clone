@@ -18,7 +18,6 @@ class ChatProvider extends StateNotifier<ChatState> {
 
     try {
       final chats = await repository.getChats();
-
       state = state.copyWith(chats: chats, isLoading: false);
     } catch (e) {
       _handleError(e);

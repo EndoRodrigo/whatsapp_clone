@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:whatsapp_clone/features/chat/presentation/widgets/ChatErrorListener.dart';
 
 import 'features/chat/presentation/pages/home_view.dart';
 
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
         colorSchemeSeed: Colors.green,
         useMaterial3: true,
       ),
-      home: const HomeView(),
+      home: ChatErrorListener(child: const HomeView()),
     );
   }
 }
