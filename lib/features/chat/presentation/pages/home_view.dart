@@ -86,7 +86,19 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          ref.read(chatProvider.notifier).addChat(Chat(name: 'Endo', lastMessage: 'Bienvenido al clon de whasap', hour: '10:30'));
+          ref
+              .read(chatProvider.notifier)
+              .addChat(
+                Chat(
+                  name: 'Endo',
+                  lastMessage: 'Bienvenido al clon de whasap',
+                  hour: '10:30',
+                  isFavorite: false,
+                  isRead: false,
+                  photoUrl: 'Foto',
+                  isArchived: false,
+                ),
+              );
         },
         child: const Icon(Icons.message),
       ),
@@ -127,4 +139,3 @@ Future<void> _showDeleteDialog(
     },
   );
 }
-

@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:whatsapp_clone/features/chat/presentation/widgets/ChatErrorListener.dart';
 
 import 'features/chat/presentation/pages/home_view.dart';
+import 'features/chat/presentation/widgets/chat_error_listener.dart';
 
 void main() {
   runApp(

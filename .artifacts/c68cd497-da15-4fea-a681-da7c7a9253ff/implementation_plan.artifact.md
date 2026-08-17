@@ -1,69 +1,45 @@
-# Plan de corrección de errores - WhatsApp Clone
+# Plan de Corrección: Carga de Datos y Base de Datos
 
-Este plan detalla las correcciones necesarias para resolver los errores de compilación, advertencias de análisis y problemas estructurales en el proyecto.
+Este plan corrige los errores al cargar datos causados por un esquema de base de datos incompleto y desactualizado.
 
 ## User Review Required
 
 > [!IMPORTANT]
-> Se realizarán cambios en los nombres de los archivos para seguir las convenciones de Flutter (`snake_case`). Esto afectará a las importaciones en todo el proyecto.
+> Se incrementará la versión de la base de datos a **5** para forzar la actualización del esquema y asegurar que las columnas `photoUrl` e `isArchived` existan para todos los usuarios.
 
-> [!WARNING]
-> El archivo `HomeView.dart` actualmente contiene la clase `ArchivedView`. Se modificará para que contenga la clase `HomeView` (Pantalla principal con todos los chats).
-
-## Open Questions
-
-1. ¿Hay algún diseño específico que desees para la `HomeView`? Por defecto, mostraré una lista de todos los chats no archivados con navegación a favoritos y archivados.
+> [!NOTE]
+> Se corregirá el nombre del archivo `ChatErrorListener.dart` a `chat_error_listener.dart` para cumplir con las convenciones de Flutter.
 
 ## Proposed Changes
 
-### [Component] Renombrado de archivos y directorios
-Se cambiarán los nombres de los archivos para cumplir con `lower_case_with_underscores` y se corregirá el nombre del directorio `provaider` a `provider`.
+### [Component] Data Layer (SQLite)
 
-#### [MODIFY] [SQLiteChatDataSource.dart](file:///C:/Users/endor/StudioProjects/whatsapp_clone/lib/features/chat/data/database/SQLiteChatDataSource.dart) -> `sqlite_chat_data_source.dart`
-#### [MODIFY] [ChatRepositoryImpl.dart](file:///C:/Users/endor/StudioProjects/whatsapp_clone/lib/features/chat/data/repositories/ChatRepositoryImpl.dart) -> `chat_repository_impl.dart`
-#### [MODIFY] [ArchivedView.dart](file:///C:/Users/endor/StudioProjects/whatsapp_clone/lib/features/chat/presentation/pages/ArchivedView.dart) -> `archived_view.dart`
-#### [MODIFY] [HomeView.dart](file:///C:/Users/endor/StudioProjects/whatsapp_clone/lib/features/chat/presentation/pages/HomeView.dart) -> `home_view.dart`
-#### [MODIFY] [login_button..dart](file:///C:/Users/endor/StudioProjects/whatsapp_clone/lib/features/chat/presentation/widgets/login_button..dart) -> `login_button.dart`
+#### [MODIFY] [app_database.dart](file:///C:/Users/endor/StudioProjects/whatsapp_clone/lib/features/chat/data/database/app_database.dart)
+- Incrementar `version` a `5`.
+- Actualizar `_onCreate` para incluir `photoUrl TEXT` e `isArchived INTEGER NOT NULL DEFAULT 0`.
+- Actualizar `_onUpgrade` para manejar todas las versiones hasta la 5 de forma segura.
 
 ---
 
-### [Component] Presentation Logic (Providers)
-Corrección del uso de `AsyncValue` vs `List`.
+### [Component] Presentation Layer (Widgets)
 
-#### [MODIFY] [favorite_chat_provider.dart](file:///C:/Users/endor/StudioProjects/whatsapp_clone/lib/features/chat/presentation/provaider/favorite_chat_provider.dart)
-- Eliminar `.maybeWhen()` ya que `chatProvider` devuelve una lista directa.
-
-#### [MODIFY] [chat_provider.dart](file:///C:/Users/endor/StudioProjects/whatsapp_clone/lib/features/chat/presentation/provaider/chat_provider.dart)
-- Asegurar que la carga inicial de chats se realice correctamente.
+#### [MODIFY] [chat_error_listener.dart](file:///C:/Users/endor/StudioProjects/whatsapp_clone/lib/features/chat/presentation/widgets/ChatErrorListener.dart) [RENAME]
+- Renombrar archivo a `chat_error_listener.dart`.
+- Actualizar importaciones en el proyecto si es necesario.
 
 ---
 
-### [Component] UI Components & Pages
+### [Component] Refactoring (Imports)
 
-#### [MODIFY] [chat_tile.dart](file:///C:/Users/endor/StudioProjects/whatsapp_clone/lib/features/chat/presentation/widgets/chat_tile.dart)
-- Envolver `ListTile` en un `GestureDetector` para soportar `onDoubleTap`.
-- Eliminar importaciones innecesarias.
-
-#### [MODIFY] [favorites_view.dart](file:///C:/Users/endor/StudioProjects/whatsapp_clone/lib/features/chat/presentation/pages/favorites_view.dart)
-- Pasar argumentos obligatorios a `ChatTile`.
-- Limpiar el código redundante.
-
-#### [MODIFY] [detail_view.dart](file:///C:/Users/endor/StudioProjects/whatsapp_clone/lib/features/chat/presentation/widgets/detail_view.dart)
-- Corregir el uso de `.when()` sobre una lista.
-
-#### [MODIFY] [home_view.dart](file:///C:/Users/endor/StudioProjects/whatsapp_clone/lib/features/chat/presentation/pages/home_view.dart)
-- Implementar la clase `HomeView` correctamente con navegación.
-
-#### [MODIFY] [main.dart](file:///C:/Users/endor/StudioProjects/whatsapp_clone/lib/main.dart)
-- Actualizar importaciones y el nombre de la clase `HomeView`.
+#### [MODIFY] [sqlite_chat_data_source.dart](file:///C:/Users/endor/StudioProjects/whatsapp_clone/lib/features/chat/data/database/sqlite_chat_data_source.dart)
+- Eliminar importación no utilizada `chat_exception.dart`.
 
 ## Verification Plan
 
 ### Automated Tests
-- Ejecutar `flutter analyze` para verificar que no queden errores ni advertencias.
-- Ejecutar `flutter build` (si es posible en el entorno) para asegurar la integridad del proyecto.
+- Ejecutar `flutter analyze` para verificar que no haya advertencias de nombres de archivos o importaciones.
 
 ### Manual Verification
-- Verificar la navegación entre Home, Favoritos y Archivados.
-- Comprobar que el doble toque marque favoritos.
-- Comprobar que el archivo/desarchivo funcione correctamente.
+- Iniciar la aplicación y verificar que los chats de prueba se carguen correctamente.
+- Verificar que no aparezca el mensaje de "Ocurrió un error inesperado" al iniciar.
+- Probar la funcionalidad de archivar para asegurar que la columna `isArchived` funciona correctamente.

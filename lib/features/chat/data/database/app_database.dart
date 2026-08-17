@@ -26,7 +26,7 @@ class AppDatabase {
   Future<Database> _initDatabase() async {
     final databasePath = await getDatabasesPath();
     final path = join(databasePath, 'whatsapp_clone.db');
-    return await openDatabase(path, version: 3, onCreate: _onCreate, onUpgrade: _onUpgrade);
+    return await openDatabase(path, version: 5, onCreate: _onCreate, onUpgrade: _onUpgrade);
   }
 
   Future<void> _onCreate(Database db, int version) async {
@@ -38,7 +38,9 @@ class AppDatabase {
         lastMessage TEXT NOT NULL,
         hour TEXT NOT NULL,
         isRead INTEGER NOT NULL,
-        isFavorite INTEGER NOT NULL
+        isFavorite INTEGER NOT NULL,
+        photoUrl TEXT,
+        isArchived INTEGER NOT NULL DEFAULT 0
       )
       '''
     );
@@ -55,6 +57,20 @@ class AppDatabase {
       await db.execute(
         'ALTER TABLE chats ADD COLUMN isArchived INTEGER NOT NULL DEFAULT 0',
       );
+    }
+    
+    // Si el usuario ya estaba en la versión 4 pero sin las columnas (error previo)
+    if (oldVersion < 5) {
+      final columns = await db.rawQuery('PRAGMA table_info(chats)');
+      final columnNames = columns.map((c) => c['name'] as String).toList();
+      
+      if (!columnNames.contains('photoUrl')) {
+        await db.execute('ALTER TABLE chats ADD COLUMN photoUrl TEXT');
+      }
+      
+      if (!columnNames.contains('isArchived')) {
+        await db.execute('ALTER TABLE chats ADD COLUMN isArchived INTEGER NOT NULL DEFAULT 0');
+      }
     }
   }
 }

@@ -1,6 +1,5 @@
 import 'package:whatsapp_clone/features/chat/data/exceptions/chat_not_found_exception.dart';
 import 'package:whatsapp_clone/features/chat/dominian/chat.dart';
-import 'package:whatsapp_clone/features/chat/dominian/exceptions/chat_exception.dart';
 
 import '../chat_mock.dart';
 import '../datasources/chat_datasource.dart';
