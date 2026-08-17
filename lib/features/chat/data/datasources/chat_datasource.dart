@@ -1,4 +1,4 @@
-import '../../dominian/chat.dart';
+import '../../domain/chat.dart';
 
 abstract class ChatDataSource {
   Future<List<Chat>> getChats();

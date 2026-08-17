@@ -8,7 +8,7 @@ class Chat {
   final String? photoUrl;
   final bool isArchived;
 
-  Chat({
+  const Chat({
     this.id,
     required this.name,
     required this.lastMessage,
@@ -43,7 +43,7 @@ class Chat {
 
   factory Chat.fromMap(Map<String, dynamic> map) {
     return Chat(
-      id: map['id'] as int,
+      id: map['id'] as int?,
       name: map['name'] as String,
       lastMessage: map['lastMessage'] as String,
       hour: map['hour'] as String,
@@ -55,20 +55,15 @@ class Chat {
   }
 
   Map<String, dynamic> toMap() {
-  final map = <String, dynamic>{
-    'name': name,
-    'lastMessage': lastMessage,
-    'hour': hour,
-    'isFavorite': isFavorite ? 1 : 0,
-    'isRead': isRead ? 1 : 0,
-    'photoUrl': photoUrl,
-    'isArchived': isArchived ? 1 : 0,
-  };
-
-  if (id != null) {
-    map['id'] = id;
+    return {
+      if (id != null) 'id': id,
+      'name': name,
+      'lastMessage': lastMessage,
+      'hour': hour,
+      'isFavorite': isFavorite ? 1 : 0,
+      'isRead': isRead ? 1 : 0,
+      'photoUrl': photoUrl,
+      'isArchived': isArchived ? 1 : 0,
+    };
   }
-
-  return map;
-}
 }

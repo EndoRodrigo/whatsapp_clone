@@ -1,4 +1,4 @@
-import '../dominian/chat.dart';
+import '../domain/chat.dart';
 
 final List<Chat> mockChats = [
   Chat(

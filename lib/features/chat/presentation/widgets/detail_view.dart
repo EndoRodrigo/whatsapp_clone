@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../dominian/chat.dart';
+import '../../domain/chat.dart';
 import '../provider/chat_provider.dart';
 
 class DetailView extends ConsumerWidget {
@@ -14,10 +14,13 @@ class DetailView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final chats = ref.watch(chatProvider).chats;
+    final chatsAsync = ref.watch(chatProvider);
 
-    final currentChat = chats.firstWhere(
-      (c) => c.id == chat.id,
+    final currentChat = chatsAsync.maybeWhen(
+      data: (chats) => chats.firstWhere(
+        (c) => c.id == chat.id,
+        orElse: () => chat,
+      ),
       orElse: () => chat,
     );
 

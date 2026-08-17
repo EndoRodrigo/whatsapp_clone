@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-
-
-import '../../dominian/chat.dart';
+import '../../domain/chat.dart';
 
 class ChatTile extends StatelessWidget {
   final Chat chat;
   final VoidCallback onTap;
   final VoidCallback onDoubleTap;
   final VoidCallback onArchive;
+  final VoidCallback? onLongPress;
 
   const ChatTile({
     super.key,
@@ -15,63 +14,101 @@ class ChatTile extends StatelessWidget {
     required this.onTap,
     required this.onDoubleTap,
     required this.onArchive,
+    this.onLongPress,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
+      onTap: onTap,
       onDoubleTap: onDoubleTap,
+      onLongPress: onLongPress,
       child: ListTile(
-        leading: CircleAvatar(
-          child: Text(chat.name.isNotEmpty ? chat.name[0].toUpperCase() : '?'),
-        ),
-        title: Row(
-          children: [
-            Expanded(
-              child: Text(
-                chat.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            if (chat.isFavorite)
-              const Padding(
-                padding: EdgeInsets.only(left: 6),
-                child: Icon(Icons.star, size: 18),
-              ),
-          ],
-        ),
+        leading: _ChatAvatar(name: chat.name),
+        title: _ChatTitle(name: chat.name, isFavorite: chat.isFavorite),
         subtitle: Text(
           chat.isArchived
               ? 'Archivado'
               : chat.isRead
-              ? 'Leído'
-              : 'No leído',
+                  ? 'Leído'
+                  : 'No leído',
         ),
-        onTap: onTap,
-        trailing: PopupMenuButton<String>(
-          onSelected: (value) {
-            if (value == 'archive') {
-              onArchive();
-            }
-          },
-          itemBuilder: (context) {
-            return [
-              PopupMenuItem<String>(
-                value: 'archive',
-                child: Row(
-                  children: [
-                    Icon(chat.isArchived ? Icons.unarchive : Icons.archive),
-                    const SizedBox(width: 8),
-                    Text(chat.isArchived ? 'Desarchivar' : 'Archivar'),
-                  ],
-                ),
-              ),
-            ];
-          },
+        trailing: _ChatActions(
+          isArchived: chat.isArchived,
+          onArchive: onArchive,
         ),
       ),
     );
   }
 }
 
+class _ChatAvatar extends StatelessWidget {
+  final String name;
+
+  const _ChatAvatar({required this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    return CircleAvatar(
+      child: Text(name.isNotEmpty ? name[0].toUpperCase() : '?'),
+    );
+  }
+}
+
+class _ChatTitle extends StatelessWidget {
+  final String name;
+  final bool isFavorite;
+
+  const _ChatTitle({required this.name, required this.isFavorite});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        if (isFavorite)
+          const Padding(
+            padding: EdgeInsets.only(left: 6),
+            child: Icon(Icons.star, size: 18, color: Colors.amber),
+          ),
+      ],
+    );
+  }
+}
+
+class _ChatActions extends StatelessWidget {
+  final bool isArchived;
+  final VoidCallback onArchive;
+
+  const _ChatActions({required this.isArchived, required this.onArchive});
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<String>(
+      onSelected: (value) {
+        if (value == 'archive') {
+          onArchive();
+        }
+      },
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          value: 'archive',
+          child: Row(
+            children: [
+              Icon(isArchived ? Icons.unarchive : Icons.archive),
+              const SizedBox(width: 8),
+              Text(isArchived ? 'Desarchivar' : 'Archivar'),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
