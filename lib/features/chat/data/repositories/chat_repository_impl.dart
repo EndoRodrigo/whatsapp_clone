@@ -1,3 +1,4 @@
+import 'package:whatsapp_clone/features/chat/data/exceptions/chat_not_found_exception.dart';
 import 'package:whatsapp_clone/features/chat/dominian/exceptions/chat_exception.dart';
 
 import '../../dominian/chat.dart';
@@ -18,8 +19,10 @@ class ChatRepositoryImpl implements ChatRepository {
   Future<Chat> toggleFavorite(int id) async {
     try {
       return await dataSource.toggleFavorite(id);
-    } catch (e) {
-      throw ChatException(ChatError.update);
+    } on ChatNotFoundException {
+      throw ChatException(ChatError.notFound);
+    } catch (e, stackTrace) {
+      throw ChatException(ChatError.unknown, cause: e, stackTrace: stackTrace);
     }
   }
 
@@ -28,7 +31,7 @@ class ChatRepositoryImpl implements ChatRepository {
     try {
       return await dataSource.toggleRead(id);
     } catch (e) {
-       throw ChatException(ChatError.update);
+      throw ChatException(ChatError.update);
     }
   }
 
@@ -47,7 +50,7 @@ class ChatRepositoryImpl implements ChatRepository {
     try {
       return await dataSource.toggleArchived(id);
     } catch (e) {
-       throw ChatException(ChatError.update);
+      throw ChatException(ChatError.update);
     }
   }
 }

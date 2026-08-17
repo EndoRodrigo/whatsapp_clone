@@ -1,3 +1,4 @@
+import 'package:whatsapp_clone/features/chat/data/exceptions/chat_not_found_exception.dart';
 import 'package:whatsapp_clone/features/chat/dominian/chat.dart';
 import 'package:whatsapp_clone/features/chat/dominian/exceptions/chat_exception.dart';
 
@@ -51,7 +52,7 @@ class SQLiteChatDataSource implements ChatDataSource {
     );
 
     if (updateChat == null) {
-      throw ChatException(ChatError.notFound);
+      throw ChatNotFoundException(id);
     }
 
     return updateChat;
@@ -62,7 +63,7 @@ class SQLiteChatDataSource implements ChatDataSource {
     final updateChat = await _updateChat(id, (chat) => chat.copyWith(isRead: !chat.isRead));
 
     if (updateChat == null) {
-      throw ChatException(ChatError.notFound);
+      throw ChatNotFoundException(id);
     }
 
     return updateChat;
@@ -75,7 +76,7 @@ class SQLiteChatDataSource implements ChatDataSource {
       (chat) => chat.copyWith(isArchived: !chat.isArchived),
     );
     if (updateChat == null) {
-      throw ChatException(ChatError.notFound);
+      throw ChatNotFoundException(id);
     }
 
     return updateChat;
